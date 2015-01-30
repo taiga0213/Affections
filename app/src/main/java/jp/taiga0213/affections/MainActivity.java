@@ -2,6 +2,7 @@ package jp.taiga0213.affections;
 
 
 import android.app.ActivityManager;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -36,6 +37,8 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        startService(new Intent(this,MyService.class));
     }
 
     @Override
@@ -89,8 +92,14 @@ public class MainActivity extends ActionBarActivity {
                 e.printStackTrace();
             }
 
-            sendNotification();
+//            sendNotification();
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
     }
 
     @Override
@@ -117,15 +126,15 @@ public class MainActivity extends ActionBarActivity {
 
     private void sendNotification() {
 
-        Intent kiintent = new Intent(this, MainActivity.class);
+        Intent kiintent = new Intent(this, DialogActivity.class);
         kiintent.putExtra("af", "喜");
         PendingIntent ki = PendingIntent.getActivity(this, REQUEST_K, kiintent, 0);
         
-        Intent dintent = new Intent(this, MainActivity.class);
+        Intent dintent = new Intent(this, DialogActivity.class);
         dintent.putExtra("af", "怒");
         PendingIntent d = PendingIntent.getActivity(this, REQUEST_D, dintent, 0);
 
-        Intent aiintent = new Intent(this, MainActivity.class);
+        Intent aiintent = new Intent(this, DialogActivity.class);
         aiintent.putExtra("af", "哀");
         PendingIntent ai = PendingIntent.getActivity(this, REQUEST_A, aiintent, 0);
 
@@ -150,8 +159,14 @@ public class MainActivity extends ActionBarActivity {
         builder.addAction(R.drawable.ic_launcher, "怒", d);
         builder.addAction(R.drawable.ic_launcher, "哀", ai);
 
+        Notification notification = builder.build();
+
+        notification.flags = Notification.FLAG_ONGOING_EVENT;
+
+
         // NotificationManagerを取得
         NotificationManager manager = (NotificationManager) getSystemService(Service.NOTIFICATION_SERVICE);
+
         // Notificationを作成して通知
-        manager.notify(REQUEST_C, builder.build());    }
+        manager.notify(REQUEST_C, notification);    }
 }
