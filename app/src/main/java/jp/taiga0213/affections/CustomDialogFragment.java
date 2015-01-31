@@ -6,10 +6,12 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +50,8 @@ public class CustomDialogFragment extends DialogFragment {
             TextView mes = (TextView)dialog.findViewById(R.id.message);
             mes.setText(appName+" + "+affection +"?");
 
+            ImageView icon = (ImageView)dialog.findViewById(R.id.app_icon);
+            icon.setImageBitmap(((BitmapDrawable) packageManager.getApplicationInfo(runningApp.get(1).processName, 0).loadIcon(packageManager)).getBitmap());
         } catch (Exception e) {
             e.printStackTrace();
         }
