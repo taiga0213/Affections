@@ -1,40 +1,31 @@
 package jp.taiga0213.affections;
 
 import android.app.Activity;
-import android.app.ActivityManager;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class DialogActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
         setContentView(R.layout.activity_dialog);
 
-        DialogFragment dialog = new SimpleDialogFragment() {
+        DialogFragment fragment = new CustomDialogFragment(){
             @Override
             public void onCancel(DialogInterface dialog) {
                 super.onCancel(dialog);
                 finish();
             }
         };
-        dialog.show(getFragmentManager(), "");
+        fragment.show(getFragmentManager(),"test");
+
     }
 
     @Override
@@ -62,40 +53,5 @@ public class DialogActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-
-    public static class SimpleDialogFragment extends DialogFragment {
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the Builder class for convenient dialog construction
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage("ダイアログ")
-                    .setPositiveButton("はい", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // FIRE ZE MISSILES!
-                            ArrayList<String> appList = new ArrayList<String>();
-                            ActivityManager activityManager = (ActivityManager) getActivity().getSystemService(ACTIVITY_SERVICE);
-                            // 起動中のアプリ情報を取得
-                            List<ActivityManager.RunningAppProcessInfo> runningApp = activityManager.getRunningAppProcesses();
-                            PackageManager packageManager = getActivity().getPackageManager();
-                            try {
-                                Toast.makeText(getActivity(), (String) packageManager.getApplicationLabel(packageManager.getApplicationInfo(runningApp.get(1).processName, 0)) + "+" + getActivity().getIntent().getStringExtra("af"), Toast.LENGTH_SHORT).show();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                            getActivity().finish();
-                        }
-                    })
-                    .setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // User cancelled the dialog
-                            getActivity().finish();
-                        }
-                    });
-            // Create the AlertDialog object and return it
-            return builder.create();
-        }
     }
 }
