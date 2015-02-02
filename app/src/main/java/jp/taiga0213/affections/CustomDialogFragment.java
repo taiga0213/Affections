@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
@@ -15,8 +16,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import jp.taiga0213.beans.AffectionBean;
 
 /**
  * Created by feapar on 2015/01/31.
@@ -24,7 +28,9 @@ import java.util.List;
 public class CustomDialogFragment extends DialogFragment {
 
     private String appName;
+    private String appPackage;
     private String affection;
+    private byte[] appIcon;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -44,14 +50,22 @@ public class CustomDialogFragment extends DialogFragment {
         List<ActivityManager.RunningAppProcessInfo> runningApp = activityManager.getRunningAppProcesses();
         PackageManager packageManager = getActivity().getPackageManager();
         try {
-            appName =  (String) packageManager.getApplicationLabel(packageManager.getApplicationInfo(runningApp.get(1).processName, 0));
-            affection =  getActivity().getIntent().getStringExtra("af");
+            appName = (String) packageManager.getApplicationLabel(packageManager.getApplicationInfo(runningApp.get(1).processName, 0));
+            affection = getActivity().getIntent().getStringExtra("af");
+            appPackage = packageManager.getApplicationInfo(runningApp.get(1).processName, 0).packageName;
 
-            TextView mes = (TextView)dialog.findViewById(R.id.message);
-            mes.setText(appName+" + "+affection +"?");
+            TextView mes = (TextView) dialog.findViewById(R.id.message);
+            mes.setText(appName + " + " + affection + "?");
 
-            ImageView icon = (ImageView)dialog.findViewById(R.id.app_icon);
+            ImageView icon = (ImageView) dialog.findViewById(R.id.app_icon);
             icon.setImageBitmap(((BitmapDrawable) packageManager.getApplicationInfo(runningApp.get(1).processName, 0).loadIcon(packageManager)).getBitmap());
+
+            // Bitmap形式をバイナリに変換
+
+            Bitmap bitmap = ((BitmapDrawable) packageManager.getApplicationInfo(runningApp.get(1).processName, 0).loadIcon(packageManager)).getBitmap();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            appIcon = baos.toByteArray();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -60,7 +74,17 @@ public class CustomDialogFragment extends DialogFragment {
         dialog.findViewById(R.id.positive_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), appName+" + "+affection, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), appName + " + " + affection, Toast.LENGTH_SHORT).show();
+
+                Toast.makeText(getActivity(), appPackage, Toast.LENGTH_SHORT).show();
+
+                AffectionBean bean = new AffectionBean();
+                bean.setAppName(appName);
+                bean.setAppPackage(appPackage);
+                bean.setAffection(affection);
+                bean.setAppIcon(appIcon);
+
+//                new UploadAsyncTask(getActivity()).execute(bean);
 
                 getActivity().finish();
 //                dismiss();
