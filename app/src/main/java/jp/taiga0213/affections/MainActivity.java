@@ -19,7 +19,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -38,62 +40,15 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        startService(new Intent(this,MyService.class));
+        startService(new Intent(this, MyService.class));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        Intent intent = getIntent();
-        if (intent.getStringExtra("af") != null) {
-
-
-            ArrayList<String> appList = new ArrayList<String>();
-            ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-            // 起動中のアプリ情報を取得
-            List<ActivityManager.RunningAppProcessInfo> runningApp = activityManager.getRunningAppProcesses();
-            PackageManager packageManager = getPackageManager();
-            if (runningApp != null) {
-                try {
-                    Toast.makeText(this, (String) packageManager.getApplicationLabel(packageManager.getApplicationInfo(runningApp.get(1).processName, 0)) + "+" + intent.getStringExtra("af"), Toast.LENGTH_SHORT).show();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            finish();
-        } else {
-            ListView listView = (ListView) findViewById(R.id.listView);
-            ArrayList<String> appList = new ArrayList<String>();
-            ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-            // 起動中のアプリ情報を取得
-            List<ActivityManager.RunningAppProcessInfo> runningApp = activityManager.getRunningAppProcesses();
-            PackageManager packageManager = getPackageManager();
-            if (runningApp != null) {
-                for (ActivityManager.RunningAppProcessInfo app : runningApp) {
-                    try {
-                        // アプリ名をリストに追加
-                        ApplicationInfo appInfo = packageManager.getApplicationInfo(app.processName, 0);
-                        appList.add((String) packageManager.getApplicationLabel(appInfo));
-                    } catch (PackageManager.NameNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-            // リスト表示
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, appList);
-            listView.setAdapter(adapter);
-
-            ImageView imageView = (ImageView)findViewById(R.id.imageView);
-            try {
-                imageView.setImageBitmap(((BitmapDrawable) packageManager.getApplicationInfo(runningApp.get(2).processName, 0).loadIcon(packageManager)).getBitmap());
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-
-//            sendNotification();
-        }
+        ListView listView = (ListView)findViewById(R.id.listView);
+        listView.setEmptyView((LinearLayout)findViewById(R.id.empty));
+        new DownloadAsyncTask(this,listView).execute();
     }
 
     @Override
@@ -129,7 +84,7 @@ public class MainActivity extends ActionBarActivity {
         Intent kiintent = new Intent(this, DialogActivity.class);
         kiintent.putExtra("af", "喜");
         PendingIntent ki = PendingIntent.getActivity(this, REQUEST_K, kiintent, 0);
-        
+
         Intent dintent = new Intent(this, DialogActivity.class);
         dintent.putExtra("af", "怒");
         PendingIntent d = PendingIntent.getActivity(this, REQUEST_D, dintent, 0);
@@ -168,5 +123,6 @@ public class MainActivity extends ActionBarActivity {
         NotificationManager manager = (NotificationManager) getSystemService(Service.NOTIFICATION_SERVICE);
 
         // Notificationを作成して通知
-        manager.notify(REQUEST_C, notification);    }
+        manager.notify(REQUEST_C, notification);
+    }
 }

@@ -1,13 +1,18 @@
 package jp.taiga0213.beans;
 
+import java.util.Date;
+
 /**
  * Created by feapar on 2015/02/01.
  */
 public class AffectionBean {
+
+    private int id;
     private String appName;
     private String appPackage;
-    private String affection;
+    private String affections;
     private byte[] appIcon;
+    private Date date;
 
     public String getAppName() {
         return appName;
@@ -25,12 +30,12 @@ public class AffectionBean {
         this.appPackage = appPackage;
     }
 
-    public String getAffection() {
-        return affection;
+    public String getAffections() {
+        return affections;
     }
 
-    public void setAffection(String affection) {
-        this.affection = affection;
+    public void setAffections(String affections) {
+        this.affections = affections;
     }
 
     public byte[] getAppIcon() {
@@ -39,5 +44,21 @@ public class AffectionBean {
 
     public void setAppIcon(byte[] appIcon) {
         this.appIcon = appIcon;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

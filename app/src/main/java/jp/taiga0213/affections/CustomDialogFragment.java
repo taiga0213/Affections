@@ -64,6 +64,7 @@ public class CustomDialogFragment extends DialogFragment {
 
             Bitmap bitmap = ((BitmapDrawable) packageManager.getApplicationInfo(runningApp.get(1).processName, 0).loadIcon(packageManager)).getBitmap();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth()/2, bitmap.getHeight()/2, false);
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
             appIcon = baos.toByteArray();
         } catch (Exception e) {
@@ -81,10 +82,10 @@ public class CustomDialogFragment extends DialogFragment {
                 AffectionBean bean = new AffectionBean();
                 bean.setAppName(appName);
                 bean.setAppPackage(appPackage);
-                bean.setAffection(affection);
+                bean.setAffections(affection);
                 bean.setAppIcon(appIcon);
 
-//                new UploadAsyncTask(getActivity()).execute(bean);
+                new UploadAsyncTask(getActivity()).execute(bean);
 
                 getActivity().finish();
 //                dismiss();

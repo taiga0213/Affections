@@ -29,7 +29,7 @@ public class UploadAsyncTask
     ProgressDialog dialog;
     Context context;
 
-    public UploadAsyncTask(Context context){
+    public UploadAsyncTask(Context context) {
         this.context = context;
     }
 
@@ -38,7 +38,8 @@ public class UploadAsyncTask
 
         HttpClient client = new DefaultHttpClient();
         String str = "";
-        String url = "http://exsamle.com";
+        String url = "http://192.168.43.94:8080/Affections/AffectionServer";//テザリング
+//        String url = "http://192.168.0.2:8080/Affections/AffectionServer";//家
 
         MultipartEntityBuilder entity = MultipartEntityBuilder.create();
         entity.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
@@ -49,25 +50,37 @@ public class UploadAsyncTask
             // 第二引数：画像データ
             // 第三引数：画像のタイプ。jpegかpngかは自由
             // 第四引数：画像ファイル名。ホントはContentProvider経由とかで取って来るべきなんだろうけど、今回は見えない部分なのでパス
-            entity.addBinaryBody("avater", params[0].getAppIcon(), ContentType.create("image/png"), "hoge.png");
+            entity.addBinaryBody("avater", params[0].getAppIcon(), ContentType.create("image/png"), params[0].getAppPackage() + ".png");
 
             // 画像以外のデータを送る場合はaddTextBodyを使う
-            ContentType textContentType = ContentType.create("application/json","UTF-8");
-            entity.addTextBody("auth_token", params[0].getAppName(), textContentType);
-            entity.addTextBody("auth_token", params[0].getAppPackage(), textContentType);
+            ContentType textContentType = ContentType.create("application/json", "UTF-8");
+            entity.addTextBody("app_name", params[0].getAppName(), textContentType);
+            entity.addTextBody("app_package", params[0].getAppPackage(), textContentType);
+            entity.addTextBody("affections", params[0].getAffections(), textContentType);
 
             HttpPost post = new HttpPost(url);
             post.setEntity(entity.build());
 
             HttpResponse httpResponse = client.execute(post);
             str = EntityUtils.toString(httpResponse.getEntity(), "UTF-8");
+
+
+//            JSONObject json = new JSONObject(str);
+//            String test = json.getString("image");
+//            byte[] decode = Base64.decode(test, Base64.DEFAULT);
+
+//            Intent intent = new Intent(context,TestActivity.class);
+//            intent.putExtra("image",decode);
+//            context.startActivity(intent);
+
             Log.i("HTTP status Line", httpResponse.getStatusLine().toString());
             Log.i("HTTP response", new String(str));
+//            Log.i("HTTP response", json.toString());
         } catch (ClientProtocolException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return str;
@@ -78,6 +91,7 @@ public class UploadAsyncTask
 //        if(dialog != null){
 //            dialog.dismiss();
 //        }
+        Log.i("HTTP", "END");
     }
 
     @Override
@@ -85,6 +99,8 @@ public class UploadAsyncTask
 //        dialog = new ProgressDialog(context);
 //        dialog.setTitle("Please wait");
 //        dialog.setMessage("Uploading...");
+//
 //        dialog.show();
+        Log.i("HTTP", "START");
     }
 }

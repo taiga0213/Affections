@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="jp.taiga0213.affections" >
 
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -20,9 +20,9 @@
         </activity>
         <activity
             android:name=".DialogActivity"
+            android:excludeFromRecents="true"
             android:label="@string/title_activity_dialog"
-            android:theme="@android:style/Theme.Translucent"
-            android:excludeFromRecents="true">
+            android:theme="@android:style/Theme.Translucent" >
         </activity>
 
         <service
@@ -30,6 +30,11 @@
             android:enabled="true"
             android:exported="true" >
         </service>
+
+        <activity
+            android:name=".TestActivity"
+            android:label="@string/title_activity_test" >
+        </activity>
     </application>
 
 </manifest>
