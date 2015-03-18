@@ -10,8 +10,12 @@ import android.graphics.BitmapFactory;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
+import java.util.HashMap;
+
 public class MyService extends Service {
 
+    private static final HashMap<Integer, Integer> affectionIcon = new HashMap<Integer, Integer> ();
+    private static final HashMap<Integer, PendingIntent> affectionIntent = new HashMap<Integer, PendingIntent> ();
     private final int REQUEST_C = 404;
     private final int REQUEST_K = 1001;
     private final int REQUEST_D = 2001;
@@ -52,10 +56,21 @@ public class MyService extends Service {
         builder.setContentText("あなたの今の感情は？");
         // Notificationを開いたときに表示されるアイコン
         builder.setLargeIcon(largeIcon);
+
+        affectionIcon.put(REQUEST_K, R.drawable.img1001);
+        affectionIcon.put(REQUEST_D, R.drawable.img2001);
+        affectionIcon.put(REQUEST_A, R.drawable.img3001);
+
+        affectionIntent.put(REQUEST_K, ki);
+        affectionIntent.put(REQUEST_D, d);
+        affectionIntent.put(REQUEST_A, ai);
+
+
         //アクション
-        builder.addAction(R.drawable.ic_launcher, "喜", ki);
-        builder.addAction(R.drawable.ic_launcher, "怒", d);
-        builder.addAction(R.drawable.ic_launcher, "哀", ai);
+        builder.addAction(affectionIcon.get(REQUEST_K), null, affectionIntent.get(REQUEST_K));
+        builder.addAction(affectionIcon.get(REQUEST_D), null, affectionIntent.get(REQUEST_D));
+        builder.addAction(affectionIcon.get(REQUEST_A), null, affectionIntent.get(REQUEST_A));
+
 
         Notification notification = builder.build();
 

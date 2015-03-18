@@ -38,7 +38,7 @@ public class UploadAsyncTask
 
         HttpClient client = new DefaultHttpClient();
         String str = "";
-        String url = "http://192.168.43.94:8080/Affections/AffectionServer";//テザリング
+        String url = "http://192.168.43.94:8080/AffectionsServer/AffectionServer";//テザリング
 //        String url = "http://192.168.0.2:8080/Affections/AffectionServer";//家
 
         MultipartEntityBuilder entity = MultipartEntityBuilder.create();
@@ -63,15 +63,6 @@ public class UploadAsyncTask
 
             HttpResponse httpResponse = client.execute(post);
             str = EntityUtils.toString(httpResponse.getEntity(), "UTF-8");
-
-
-//            JSONObject json = new JSONObject(str);
-//            String test = json.getString("image");
-//            byte[] decode = Base64.decode(test, Base64.DEFAULT);
-
-//            Intent intent = new Intent(context,TestActivity.class);
-//            intent.putExtra("image",decode);
-//            context.startActivity(intent);
 
             Log.i("HTTP status Line", httpResponse.getStatusLine().toString());
             Log.i("HTTP response", new String(str));

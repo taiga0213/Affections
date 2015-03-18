@@ -6,13 +6,17 @@
     <ImageView
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:id="@+id/appIcon"
-        android:background="@drawable/ic_launcher" />
+        android:id="@+id/appIcon" />
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:id="@+id/affectionIcon" />
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <TextView
             android:layout_width="wrap_content"
@@ -36,4 +40,5 @@
             android:id="@+id/appPackage" />
 
     </LinearLayout>
+
 </LinearLayout>

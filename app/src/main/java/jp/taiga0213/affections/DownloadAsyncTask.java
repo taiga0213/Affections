@@ -32,7 +32,7 @@ public class DownloadAsyncTask extends AsyncTask<String, Integer, List<Affection
     Context context;
     ListView listView;
 
-    public DownloadAsyncTask(Context context,ListView listView) {
+    public DownloadAsyncTask(Context context, ListView listView) {
         this.context = context;
         this.listView = listView;
     }
@@ -51,44 +51,48 @@ public class DownloadAsyncTask extends AsyncTask<String, Integer, List<Affection
 
         HttpClient client = new DefaultHttpClient();
         String str = "";
-        String url = "http://192.168.43.94:8080/Affections/AffectionServer";//テザリング
+        String url = "http://192.168.43.94:8080/AffectionsServer/AffectionServer";//テザリング
 //        String url = "http://192.168.0.2:8080/Affections/AffectionServer";//家
 
         try {
             HttpGet get = new HttpGet(url);
             HttpResponse httpResponse = client.execute(get);
-            str = EntityUtils.toString(httpResponse.getEntity(), "UTF-8");
+            int status = httpResponse.getStatusLine().getStatusCode();
+            if(status==200) {
+                str = EntityUtils.toString(httpResponse.getEntity(), "UTF-8");
 
-            JSONArray json = new JSONArray(str);
+                JSONArray json = new JSONArray(str);
 
-            ArrayList<AffectionBean> affectionBeans = new ArrayList<AffectionBean>();
+                ArrayList<AffectionBean> affectionBeans = new ArrayList<AffectionBean>();
 
-            for (int i = 0; i < json.length(); i++) {
-                AffectionBean affectionBean = new AffectionBean();
-                JSONObject jsonObject = json.getJSONObject(i);
-                affectionBean.setId(jsonObject.getInt("id"));
-                affectionBean.setAppName(jsonObject.getString("appName"));
-                affectionBean.setAppPackage(jsonObject.getString("appPackage"));
-                affectionBean.setAffections(jsonObject.getString("affections"));
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                for (int i = 0; i < json.length(); i++) {
+                    AffectionBean affectionBean = new AffectionBean();
+                    JSONObject jsonObject = json.getJSONObject(i);
+                    affectionBean.setId(jsonObject.getInt("id"));
+                    affectionBean.setAppName(jsonObject.getString("appName"));
+                    affectionBean.setAppPackage(jsonObject.getString("appPackage"));
+                    affectionBean.setAffections(jsonObject.getString("affections"));
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 //                affectionBean.setDate((Date) dateFormat.parse(jsonObject.getString("date")));
-                byte[] decode = Base64.decode(jsonObject.getString("appIcon"), Base64.DEFAULT);
-                affectionBean.setAppIcon(decode);
+                    byte[] decode = Base64.decode(jsonObject.getString("appIcon"), Base64.DEFAULT);
+                    affectionBean.setAppIcon(decode);
 
-                affectionBeans.add(affectionBean);
+                    affectionBeans.add(affectionBean);
 
+                }
+
+                Log.i("HTTP status Line", httpResponse.getStatusLine().toString());
+                Log.i("HTTP response", new String(str));
+                Log.i("HTTP json", json.toString());
+
+                return affectionBeans;
+            }else{
+                Log.d("status",String.valueOf(status));
             }
-
-            Log.i("HTTP status Line", httpResponse.getStatusLine().toString());
-            Log.i("HTTP response", new String(str));
-            Log.i("HTTP json", json.toString());
-
-            return affectionBeans;
-
-        } catch (ClientProtocolException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+//        } catch (ClientProtocolException e) {
+            //throw new RuntimeException(e);
+//      } catch (IOException e) {
+            //throw new RuntimeException(e);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -101,9 +105,9 @@ public class DownloadAsyncTask extends AsyncTask<String, Integer, List<Affection
 //        if (dialog != null) {
 //            dialog.dismiss();
 //        }
-
-        AffectionsAdapter affectionsAdapter = new AffectionsAdapter(context, 0, result);
-        listView.setAdapter(affectionsAdapter);
-
+        if (result!=null) {
+            AffectionsAdapter affectionsAdapter = new AffectionsAdapter(context, 0, result);
+            listView.setAdapter(affectionsAdapter);
+        }
     }
 }

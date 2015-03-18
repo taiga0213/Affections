@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.HashMap;
 import java.util.List;
 
 import jp.taiga0213.beans.AffectionBean;
@@ -36,6 +37,7 @@ public class AffectionsAdapter extends ArrayAdapter<AffectionBean> {
         }
 
         ImageView appIcon = (ImageView) convertView.findViewById(R.id.appIcon);
+        ImageView affectionIcon = (ImageView)convertView.findViewById(R.id.affectionIcon);
         TextView appName = (TextView) convertView.findViewById(R.id.appName);
         TextView appPackage = (TextView) convertView.findViewById(R.id.appPackage);
         TextView affections = (TextView) convertView.findViewById(R.id.affections);
@@ -46,6 +48,14 @@ public class AffectionsAdapter extends ArrayAdapter<AffectionBean> {
             icon = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
             appIcon.setImageBitmap(icon);
         }
+
+
+        HashMap<String,Integer> affectionMap = new HashMap<String,Integer>();
+        affectionMap.put("喜",R.drawable.img1001);
+        affectionMap.put("怒",R.drawable.img2001);
+        affectionMap.put("哀",R.drawable.img3001);
+
+        affectionIcon.setImageResource(affectionMap.get(bean.getAffections()));
 
         appName.setText(bean.getAppName());
         appPackage.setText(bean.getAppPackage());
