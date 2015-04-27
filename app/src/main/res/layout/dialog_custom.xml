@@ -31,11 +31,32 @@
             />
 
         <!-- メッセージ -->
-        <ImageView
+
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/app_icon"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="20dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/app_icon"
+                android:layout_weight="1"
+                android:scaleType="center"
+                android:src="@drawable/img2001"
+                android:layout_marginRight="20dp" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/affections_icon"
+                android:layout_weight="1"
+                android:scaleType="center"
+                android:src="@drawable/img1001"
+                android:layout_marginLeft="20dp" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/message"

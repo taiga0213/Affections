@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jp.taiga0213.beans.AffectionBean;
+import jp.taiga0213.map.AffectionMap;
 
 /**
  * Created by feapar on 2015/01/31.
@@ -56,6 +57,11 @@ public class CustomDialogFragment extends DialogFragment {
 
             TextView mes = (TextView) dialog.findViewById(R.id.message);
             mes.setText(appName + " + " + affection + "?");
+
+            AffectionMap ImageMap = new AffectionMap();
+            ImageView affectionsIcon = (ImageView)dialog.findViewById(R.id.affections_icon);
+
+            affectionsIcon.setImageResource(ImageMap.getImageMap().get(affection));
 
             ImageView icon = (ImageView) dialog.findViewById(R.id.app_icon);
             icon.setImageBitmap(((BitmapDrawable) packageManager.getApplicationInfo(runningApp.get(1).processName, 0).loadIcon(packageManager)).getBitmap());

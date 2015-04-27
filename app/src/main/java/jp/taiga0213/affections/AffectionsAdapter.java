@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import jp.taiga0213.beans.AffectionBean;
+import jp.taiga0213.map.AffectionMap;
 
 /**
  * Created by Taiga on 2015/02/04.
@@ -50,10 +51,8 @@ public class AffectionsAdapter extends ArrayAdapter<AffectionBean> {
         }
 
 
-        HashMap<String,Integer> affectionMap = new HashMap<String,Integer>();
-        affectionMap.put("喜",R.drawable.img1001);
-        affectionMap.put("怒",R.drawable.img2001);
-        affectionMap.put("哀",R.drawable.img3001);
+        AffectionMap ImageMap = new AffectionMap();
+        HashMap<String,Integer> affectionMap = ImageMap.getImageMap();
 
         affectionIcon.setImageResource(affectionMap.get(bean.getAffections()));
 
